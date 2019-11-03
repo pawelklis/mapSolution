@@ -26,25 +26,25 @@ Partial Class frmEditor
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmEditor))
         Me.GM1 = New GMap.NET.WindowsForms.GMapControl()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.pnsettings = New System.Windows.Forms.Panel()
+        Me.Button3 = New System.Windows.Forms.Button()
+        Me.ckAutoRefresh = New System.Windows.Forms.CheckBox()
+        Me.Button2 = New System.Windows.Forms.Button()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.TreeView1 = New System.Windows.Forms.TreeView()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
-        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
         Me.btnSAve = New System.Windows.Forms.ToolStripButton()
         Me.btnLoad = New System.Windows.Forms.ToolStripButton()
-        Me.pnsettings = New System.Windows.Forms.Panel()
-        Me.ckAutoRefresh = New System.Windows.Forms.CheckBox()
-        Me.Button3 = New System.Windows.Forms.Button()
         Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
+        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
-        Me.ToolStrip1.SuspendLayout()
         Me.pnsettings.SuspendLayout()
+        Me.ToolStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'GM1
@@ -95,11 +95,63 @@ Partial Class frmEditor
         Me.SplitContainer1.SplitterDistance = 607
         Me.SplitContainer1.TabIndex = 1
         '
+        'pnsettings
+        '
+        Me.pnsettings.Controls.Add(Me.Button3)
+        Me.pnsettings.Controls.Add(Me.ckAutoRefresh)
+        Me.pnsettings.Location = New System.Drawing.Point(198, 12)
+        Me.pnsettings.Name = "pnsettings"
+        Me.pnsettings.Size = New System.Drawing.Size(200, 192)
+        Me.pnsettings.TabIndex = 3
+        Me.pnsettings.Visible = False
+        '
+        'Button3
+        '
+        Me.Button3.Location = New System.Drawing.Point(179, 0)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(18, 23)
+        Me.Button3.TabIndex = 1
+        Me.Button3.Text = "X"
+        Me.Button3.UseVisualStyleBackColor = True
+        '
+        'ckAutoRefresh
+        '
+        Me.ckAutoRefresh.AutoSize = True
+        Me.ckAutoRefresh.Checked = True
+        Me.ckAutoRefresh.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.ckAutoRefresh.Location = New System.Drawing.Point(15, 20)
+        Me.ckAutoRefresh.Name = "ckAutoRefresh"
+        Me.ckAutoRefresh.Size = New System.Drawing.Size(146, 17)
+        Me.ckAutoRefresh.TabIndex = 0
+        Me.ckAutoRefresh.Text = "Auto odświeżanie drzewa"
+        Me.ckAutoRefresh.UseVisualStyleBackColor = True
+        '
+        'Button2
+        '
+        Me.Button2.Location = New System.Drawing.Point(31, 6)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(14, 19)
+        Me.Button2.TabIndex = 2
+        Me.Button2.Text = "+"
+        Me.Button2.TextAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.Button2.UseVisualStyleBackColor = True
+        '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(8, 6)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(14, 19)
+        Me.Button1.TabIndex = 1
+        Me.Button1.Text = "-"
+        Me.Button1.TextAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.Button1.UseVisualStyleBackColor = True
+        '
         'TreeView1
         '
-        Me.TreeView1.Location = New System.Drawing.Point(34, 177)
+        Me.TreeView1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TreeView1.Location = New System.Drawing.Point(0, 25)
         Me.TreeView1.Name = "TreeView1"
-        Me.TreeView1.Size = New System.Drawing.Size(121, 97)
+        Me.TreeView1.Size = New System.Drawing.Size(189, 425)
         Me.TreeView1.TabIndex = 2
         '
         'ToolStrip1
@@ -122,29 +174,6 @@ Partial Class frmEditor
         Me.ToolStripButton1.Size = New System.Drawing.Size(29, 22)
         Me.ToolStripButton1.Text = "+/-"
         '
-        'ContextMenuStrip1
-        '
-        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip1.Size = New System.Drawing.Size(61, 4)
-        '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(8, 6)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(17, 23)
-        Me.Button1.TabIndex = 1
-        Me.Button1.Text = "-"
-        Me.Button1.UseVisualStyleBackColor = True
-        '
-        'Button2
-        '
-        Me.Button2.Location = New System.Drawing.Point(31, 6)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(17, 23)
-        Me.Button2.TabIndex = 2
-        Me.Button2.Text = "+"
-        Me.Button2.UseVisualStyleBackColor = True
-        '
         'btnSAve
         '
         Me.btnSAve.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
@@ -162,36 +191,6 @@ Partial Class frmEditor
         Me.btnLoad.Name = "btnLoad"
         Me.btnLoad.Size = New System.Drawing.Size(23, 22)
         Me.btnLoad.Text = "Otwórz"
-        '
-        'pnsettings
-        '
-        Me.pnsettings.Controls.Add(Me.Button3)
-        Me.pnsettings.Controls.Add(Me.ckAutoRefresh)
-        Me.pnsettings.Location = New System.Drawing.Point(198, 12)
-        Me.pnsettings.Name = "pnsettings"
-        Me.pnsettings.Size = New System.Drawing.Size(200, 192)
-        Me.pnsettings.TabIndex = 3
-        '
-        'ckAutoRefresh
-        '
-        Me.ckAutoRefresh.AutoSize = True
-        Me.ckAutoRefresh.Checked = True
-        Me.ckAutoRefresh.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.ckAutoRefresh.Location = New System.Drawing.Point(15, 20)
-        Me.ckAutoRefresh.Name = "ckAutoRefresh"
-        Me.ckAutoRefresh.Size = New System.Drawing.Size(146, 17)
-        Me.ckAutoRefresh.TabIndex = 0
-        Me.ckAutoRefresh.Text = "Auto odświeżanie drzewa"
-        Me.ckAutoRefresh.UseVisualStyleBackColor = True
-        '
-        'Button3
-        '
-        Me.Button3.Location = New System.Drawing.Point(179, 0)
-        Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(18, 23)
-        Me.Button3.TabIndex = 1
-        Me.Button3.Text = "X"
-        Me.Button3.UseVisualStyleBackColor = True
         '
         'ToolStripButton2
         '
@@ -211,6 +210,11 @@ Partial Class frmEditor
         Me.ToolStripButton3.Size = New System.Drawing.Size(23, 22)
         Me.ToolStripButton3.Text = "ToolStripButton3"
         '
+        'ContextMenuStrip1
+        '
+        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(61, 4)
+        '
         'frmEditor
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -224,10 +228,10 @@ Partial Class frmEditor
         Me.SplitContainer1.Panel2.PerformLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
-        Me.ToolStrip1.ResumeLayout(False)
-        Me.ToolStrip1.PerformLayout()
         Me.pnsettings.ResumeLayout(False)
         Me.pnsettings.PerformLayout()
+        Me.ToolStrip1.ResumeLayout(False)
+        Me.ToolStrip1.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub

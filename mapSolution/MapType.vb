@@ -217,6 +217,13 @@ Imports System.Runtime.Serialization.Formatters.Binary
         adr.Lon = point.Lng
 
 
+        For Each a In Me.AdresBase
+            If a.Name = adr.Name Then
+                Console.WriteLine("Adres istnieje " & adr.Name)
+                Exit Sub
+            End If
+        Next
+
         Me.AdresBase.Add(adr)
         Console.WriteLine("Dodano adres " & adr.Name)
 

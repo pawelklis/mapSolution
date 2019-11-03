@@ -3,7 +3,7 @@ Imports GMap.NET
 Imports GMap.NET.MapProviders
 
 <Serializable> Public Class frmEditor
-    Dim mapa As MapType
+    Public mapa As MapType
     Private Sub FrmEditor_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         mapa = New MapType(Me.GM1)
         TreeView1.Dock = DockStyle.Fill
@@ -16,7 +16,10 @@ Imports GMap.NET.MapProviders
             Dim lng As Double = GM1.FromLocalToLatLng(e.X, e.Y).Lng
             Dim plc As Placemark = Nothing
             Dim st
+            Dim begtime As DateTime = Now
+            Console.WriteLine("Send Request " & lat & ", " & lng & " " & Now)
             plc = GMapProviders.OpenStreetMap.GetPlacemark(GM1.FromLocalToLatLng(e.X, e.Y), st)
+            Console.WriteLine("Response request in " & DateDiff(DateInterval.Second, begtime, Now) & " seconds")
 
             If GM1.Zoom < 18 Then Me.GM1.Zoom = 20
             Me.GM1.Position = New PointLatLng(lat, lng)
