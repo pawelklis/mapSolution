@@ -103,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HouseType.vb" />
+    <Compile Include="AdresContentType.vb" />
     <Compile Include="StreetType.vb" />
     <Compile Include="PNAType.vb" />
     <Compile Include="AddressType.vb" />

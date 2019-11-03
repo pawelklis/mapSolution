@@ -1,10 +1,12 @@
 ﻿
 Imports System.Net
+Imports System.Windows.Forms
 Imports GMap
 Imports GMap.NET
 Imports GMap.NET.MapProviders
 Imports GMap.NET.WindowsForms
 
+<DebuggerDisplay("{Name}")>
 Public Class AddressType
 
 
@@ -18,76 +20,130 @@ Public Class AddressType
     Public Property DispName As String
 
     Public Sub New()
+        Me.Id = Guid.NewGuid.ToString
     End Sub
-    Public Sub New(name As String, placemarkAddres As String, point As PointLatLng, markertype As eMarkerType)
+    Public Sub New(name As String, placemarkAddres As AdresContentType, point As PointLatLng, markertype As eMarkerType)
 ck:
-        If placemarkAddres.Split(",").Length < 9 Then
-            placemarkAddres = "," & placemarkAddres
-            GoTo ck
-        End If
 
-        Me.DispName = placemarkAddres
+
+        Me.DispName = placemarkAddres.Name
         Me.Content = New List(Of AddressType)
         Me.Name = name
         Me.MarkerType = markertype
         Me.Atype = eAdresTYpe.Region
 
-        Dim pna As New PNAType With {
-        .Atype = eAdresTYpe.PostCode,
-        .DispName = placemarkAddres,
-        .MarkerType = Me.MarkerType,
-        .Name = Me.GetPNA,
-        .Content = New List(Of AddressType)
-                }
 
-        Dim street As New StreetType With {
-        .DispName = Me.DispName,
-        .Atype = eAdresTYpe.Street,
-        .MarkerType = Me.MarkerType,
-        .Name = Me.GetStreet,
-        .Content = New List(Of AddressType)
-        }
+        Dim pna As PNAType
+        Dim pnaExist As Boolean = False
+        For Each c As PNAType In Me.Content
+            If c.DispName = placemarkAddres.postcode Then
+                pnaExist = True
+                pna = c
+                Exit For
+            End If
+        Next
 
-        Dim house As New HouseType With {
-        .DispName = Me.DispName,
-        .MarkerType = Me.MarkerType,
-        .Name = Me.GetHouseNumber,
-        .Content = New List(Of AddressType),
-        .Lon = point.Lng,
-        .Lat = point.Lat
-        }
+        If pnaExist = False Then
+            pna = New PNAType With {
+            .Atype = eAdresTYpe.PostCode,
+            .DispName = placemarkAddres.postcode,
+            .MarkerType = Me.MarkerType,
+            .Name = placemarkAddres.postcode,
+            .Content = New List(Of AddressType)
+                    }
+        End If
 
-        street.Content.Add(house)
+        Dim street As StreetType
+        Dim streetExist As Boolean = False
+        For Each s As StreetType In pna.Content
+            If s.DispName = placemarkAddres.road Then
+                streetExist = True
+                street = s
+                Exit For
+            End If
+        Next
+        If streetExist = False Then
+            street = New StreetType With {
+                   .DispName = placemarkAddres.road,
+                   .Atype = eAdresTYpe.Street,
+                   .MarkerType = Me.MarkerType,
+                   .Name = placemarkAddres.road,
+                   .Content = New List(Of AddressType)
+                   }
+        End If
 
-        pna.Content.Add(street)
+        Dim house As HouseType
+        Dim houseExist As Boolean = False
+        For Each c As HouseType In street.Content
+            If c.Name = placemarkAddres.house_number And c.DispName = placemarkAddres.placename Then
+                houseExist = True
+                house = c
+                Exit For
+            End If
+        Next
 
-        Me.Content.Add(pna)
+        If houseExist = False Then
+            house = New HouseType With {
+            .DispName = placemarkAddres.postcode & ", " & placemarkAddres.road & ", " & placemarkAddres.placename & ", " & placemarkAddres.house_number,
+            .MarkerType = Me.MarkerType,
+            .PlaceName = placemarkAddres.placename,
+            .Name = placemarkAddres.house_number,
+            .Content = New List(Of AddressType),
+            .Lon = point.Lng,
+            .Lat = point.Lat
+            }
+        End If
+
+
+        If houseExist = False Then street.Content.Add(house)
+
+        If streetExist = False Then pna.Content.Add(street)
+
+        If pnaExist = False Then Me.Content.Add(pna)
 
     End Sub
 
+    Function getNode()
+        Dim node As New TreeNode
+        node.Text = Me.Name
+        node.Tag = Me.Id
 
-    Private Function GetName()
-        Return Me.DispName.Split(",")(0)
-    End Function
-    Private Function GetStreet()
-        Return Me.DispName.Split(",")(2)
-    End Function
-    Private Function GetPNA()
-        Return Me.DispName.Split(",")(7)
-    End Function
-    Private Function GetHouseNumber()
-        Return Me.DispName.Split(",")(1)
+        For Each pna In Me.Content
+            Dim pnanode As New TreeNode
+            pnanode.Text = pna.Name
+            pnanode.Tag = pna.Id
+            For Each st In pna.Content
+                Dim streetnode As New TreeNode
+                streetnode.Text = st.Name
+                streetnode.Tag = st.Id
+                For Each hr In st.Content
+                    Dim hrnode As New TreeNode
+                    If hr.GetType = GetType(HouseType) Then
+                        Dim hh As HouseType = hr
+                        hrnode.Text = hh.Name & " " & hh.PlaceName
+                        hrnode.Tag = hh.Id
+                        streetnode.Nodes.Add(hrnode)
+                    End If
+                Next
+                pnanode.Nodes.Add(streetnode)
+            Next
+            node.Nodes.Add(pnanode)
+        Next
+
+
+        Return node
     End Function
 
-    Public Shared Function GetHouseNumber(placemarkString As String)
-ck:
-        If placemarkString.Split(",").Length < 9 Then
-            placemarkString = "," & placemarkString
-            GoTo ck
-        End If
-        Return placemarkString.Split(",")(1)
+    Public Function GetAdres(id As String) As AddressType
+        If Me.Id = id Then Return Me
+        For Each c In Me.Content
+            If c.Id = id Then
+                Return c
+            End If
+            GetAdres = c.GetAdres(id)
+            If Not IsNothing(GetAdres) Then Return GetAdres
+        Next
     End Function
-
 
 
     Public Function Point() As PointLatLng
@@ -100,7 +156,7 @@ ck:
         If Me.Point.Lat <> 0 And Me.Point.Lng <> 0 Then
 
             Dim m As New Markers.GMarkerGoogle(Me.Point, Me.MarkerType)
-            m.ToolTipText = Me.DispName .Replace(",",vbNewLine )
+            m.ToolTipText = Me.DispName.Replace(",", vbNewLine)
 
             GetMarkers.Add(m)
         End If

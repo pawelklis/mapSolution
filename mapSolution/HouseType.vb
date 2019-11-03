@@ -5,7 +5,7 @@ Imports GMap.NET.MapProviders
 
 Public Class HouseType
     Inherits AddressType
-
+    Public Property PlaceName As String
     Public Sub New()
         Me.Atype = eAdresTYpe.HouseNumber
     End Sub
