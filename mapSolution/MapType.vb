@@ -7,13 +7,16 @@ Imports GMap.NET
 Imports GMap.NET.MapProviders
 Imports GMap.NET.WindowsForms.Markers
 Imports Newtonsoft.Json.Linq
+Imports System.Runtime.Serialization
+Imports System.Runtime.Serialization.Formatters.Binary
 
-
-Public Class MapType
+<Serializable> Public Class MapType
 
     Public Property AdresBase As List(Of AdresContentType)
+    Public Property FilePath As String
 
-    Private GM As GMap.NET.WindowsForms.GMapControl
+    <NonSerialized()>
+    Public GM As GMap.NET.WindowsForms.GMapControl
     Public Sub New(gm As GMap.NET.WindowsForms.GMapControl)
         Me.GM = gm
         Me.AdresBase = New List(Of AdresContentType)
@@ -39,7 +42,30 @@ Public Class MapType
             If a.Id = id Then Return a
         Next
     End Function
-
+    Public Function GetAdresList(Optional rejon As String = Nothing, Optional pna As String = Nothing, Optional street As String = Nothing) As List(Of AdresContentType)
+        GetAdresList = New List(Of AdresContentType)
+        If Not IsNothing(rejon) Then
+            For Each a In Me.AdresBase
+                If a.Rejon = rejon Then
+                    GetAdresList.Add(a)
+                End If
+            Next
+        End If
+        If Not IsNothing(pna) Then
+            For Each a In Me.AdresBase
+                If a.postcode = pna Then
+                    GetAdresList.Add(a)
+                End If
+            Next
+        End If
+        If Not IsNothing(street) Then
+            For Each a In Me.AdresBase
+                If a.road = street Then
+                    GetAdresList.Add(a)
+                End If
+            Next
+        End If
+    End Function
     '0,Manufaktura Pączków, Oławska, Stare Miasto, Osiedle Stare Miasto, Wrocław, dolnośląskie, 50-123, RP
 
     Public Shared Function GetAdres(lat As Double, lon As Double) As AdresContentType
@@ -74,7 +100,7 @@ Public Class MapType
     Public Function GetNode() As TreeNode
 
         Dim n As New TreeNode(" Baza adresowa  ")
-
+        n.Tag = "baza"
         'GMarkerGoogleType max 37
 
         Dim i As Integer = 1
@@ -103,6 +129,7 @@ Public Class MapType
 
                         Dim houseNode As New TreeNode(h.house_number & " " & h.placename)
                         houseNode.Tag = h
+                        houseNode.Name = h.Id
                         streetnode.Nodes.Add(houseNode)
                     Next
                     Dim stad As Boolean = True
@@ -189,7 +216,13 @@ Public Class MapType
         adr.Lat = point.Lat
         adr.Lon = point.Lng
 
+
         Me.AdresBase.Add(adr)
+        Console.WriteLine("Dodano adres " & adr.Name)
+
+
+
+
 
         'Dim adrr As New AddressType(name, adr, point, AddressType.eMarkerType.blue_dot)
         'If adr.placename <> "" Then
@@ -246,6 +279,17 @@ Public Class MapType
 
 
     End Sub
+    Sub ShowMArkers(adr As AdresContentType)
+        Me.GM.Overlays.Clear()
+        Me.GM.Overlays.Add(New WindowsForms.GMapOverlay("mark"))
+        For Each m In adr.GetMarkers
+            Me.GM.Overlays(0).Markers.Add(m)
+        Next
+
+
+
+    End Sub
+
     Sub ShowMArkers(Optional rejon As String = Nothing, Optional pna As String = Nothing, Optional street As String = Nothing)
         Me.GM.Overlays.Clear()
         Me.GM.Overlays.Add(New WindowsForms.GMapOverlay("mark"))
@@ -349,6 +393,51 @@ Public Class MapType
 
 
     End Sub
+    Public Sub Save()
+        If String.IsNullOrEmpty(Me.FilePath) Then
+            Dim sf As New SaveFileDialog
+            sf.DefaultExt = ".mpd"
+            sf.AddExtension = True
+            sf.FileName = "adres_base.mpd"
 
+            If sf.ShowDialog = DialogResult.OK Then
+                Me.FilePath = sf.FileName
+
+
+            Else
+                Exit Sub
+            End If
+        End If
+        If Path.GetExtension(Me.FilePath) <> ".mpd" Then
+            Me.FilePath = Me.FilePath & ".mpd"
+        End If
+
+        Dim formatter As IFormatter = New BinaryFormatter
+        Dim stream As IO.Stream = New FileStream(Me.FilePath, FileMode.Create, FileAccess.Write, FileShare.None)
+        formatter.Serialize(stream, Me)
+        stream.Close()
+    End Sub
+
+
+    Public Function Load()
+        Dim opf As New OpenFileDialog
+        opf.Filter = ".mpd|"
+
+        If opf.ShowDialog = DialogResult.OK Then
+            Me.FilePath = opf.FileName
+            If File.Exists(Me.FilePath) Then
+                Dim formatter As IFormatter = New BinaryFormatter
+                Dim stream As IO.Stream = New FileStream(Me.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read)
+
+
+                Dim bd = DirectCast(formatter.Deserialize(stream), MapType)
+                stream.Close()
+
+                Return bd
+
+            End If
+        End If
+        Return Nothing
+    End Function
 
 End Class

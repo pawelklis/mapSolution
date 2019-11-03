@@ -7,7 +7,7 @@ Imports GMap.NET.MapProviders
 Imports GMap.NET.WindowsForms
 
 <DebuggerDisplay("{Name}")>
-Public Class AddressType
+<Serializable> Public Class AddressType
 
 
     Public Property Id As String

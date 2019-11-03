@@ -7,7 +7,7 @@ Imports GMap.NET.WindowsForms.Markers
 Imports Newtonsoft.Json.Linq
 
 <DebuggerDisplay("{Name}")>
-Public Class AdresContentType
+<Serializable> Public Class AdresContentType
 
     Public Property placename As String
     Public Property dispname As String

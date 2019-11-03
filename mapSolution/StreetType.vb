@@ -3,7 +3,7 @@ Imports System.Net
 Imports GMap
 Imports GMap.NET.MapProviders
 
-Public Class StreetType
+<serializable> public class StreetType
     Inherits AddressType
 
     Public Sub New()

@@ -2,7 +2,7 @@
 Imports GMap.NET
 Imports GMap.NET.MapProviders
 
-Public Class frmEditor
+<Serializable> Public Class frmEditor
     Dim mapa As MapType
     Private Sub FrmEditor_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         mapa = New MapType(Me.GM1)
@@ -18,7 +18,7 @@ Public Class frmEditor
             Dim st
             plc = GMapProviders.OpenStreetMap.GetPlacemark(GM1.FromLocalToLatLng(e.X, e.Y), st)
 
-     If GM1.Zoom<18 then       Me.GM1.Zoom = 20
+            If GM1.Zoom < 18 Then Me.GM1.Zoom = 20
             Me.GM1.Position = New PointLatLng(lat, lng)
 
             If st = GeoCoderStatusCode.OK Then
@@ -35,15 +35,21 @@ Public Class frmEditor
 
                 mapa.AddAdres("", AdresObject, New PointLatLng(lat, lng), True)
             End If
-
+            RefreshTreeView1()
         End If
 
 
-        RefreshTreeView1()
+
 
 
     End Sub
-    Sub RefreshTreeView1()
+    Sub RefreshTreeView1(Optional skin As Boolean = False)
+        If skin = False Then
+            If ckAutoRefresh.Checked = False Then
+                Exit Sub
+            End If
+        End If
+
         TreeView1.Nodes.Clear()
         TreeView1.Nodes.Add(mapa.GetNode)
         If ToolStripButton1.Checked = True Then
@@ -73,10 +79,13 @@ Public Class frmEditor
 
             Dim ctm As New ContextMenuStrip
 
+            If e.Node.Tag.GetType = GetType(AdresContentType) Then
+                ctm.Items.Add("Zmień")
+            End If
 
-            ctm.Items.Add("Zmień")
             ctm.Items.Add("Usuń")
             ctm.Items.Add("Rejon")
+            ctm.Items.Add("Pokaż punkty")
 
             AddHandler ctm.ItemClicked, AddressOf ctm_Item_Click
             TreeView1.ContextMenuStrip = ctm
@@ -90,13 +99,63 @@ Public Class frmEditor
     Private Sub ctm_Item_Click(sender As Object, e As ToolStripItemClickedEventArgs)
         Select Case e.ClickedItem.Text
             Case "Zmień"
-                Dim node As TreeNode = TreeView1.SelectedNode
-                Dim ad As AdresContentType = mapa.GetAdres(node.Tag)
-                Dim newName As String = InputBox("Nowa wartość", "Edycja", ad.Name)
-                If String.IsNullOrEmpty(newName) Then Exit Sub
+                Try
+                    Dim node As TreeNode = TreeView1.SelectedNode
+                    Dim ad As AdresContentType = node.Tag
+                    Dim newName As String = InputBox("Nowa wartość", "Edycja", ad.Name)
+                    If String.IsNullOrEmpty(newName) Then Exit Sub
+                Catch ex As Exception
+
+                End Try
+
                 'ad.Name = newName
                 'If ad.Atype = AddressType.eAdresTYpe.PostCode Then mapa.MoveAdres(ad)
             Case "Usuń"
+                Dim node As TreeNode = TreeView1.SelectedNode
+                Dim typ = node.Tag
+                If typ.GetType = GetType(AdresContentType) Then
+                    Dim a As AdresContentType = node.Tag
+                    mapa.removeAdres(node.Name)
+                Else
+                    Select Case node.Tag
+                        Case "rejon"
+                            Dim lr As List(Of String) = mapa.DistinctRejon
+                            For Each r In lr
+                                If r = node.Text Then
+                                    For Each adr In mapa.GetAdresList(r)
+                                        mapa.AdresBase.Remove(adr)
+                                    Next
+                                End If
+                            Next
+                        Case "pna"
+                            For Each adr In mapa.GetAdresList(Nothing, node.Text)
+                                mapa.AdresBase.Remove(adr)
+                            Next
+                        Case "street"
+                            For Each adr In mapa.GetAdresList(Nothing, Nothing, node.Text)
+                                mapa.AdresBase.Remove(adr)
+                            Next
+                    End Select
+                End If
+
+            Case "Pokaż punkty"
+                Dim node As TreeNode = TreeView1.SelectedNode
+                Dim typ = node.Tag
+                If typ.GetType = GetType(AdresContentType) Then
+                    Dim a As AdresContentType = node.Tag
+                    mapa.ShowMArkers(a)
+                Else
+                    Select Case typ
+                        Case "rejon"
+                            mapa.ShowMArkers(node.Text)
+                        Case "pna"
+                            mapa.ShowMArkers(Nothing, node.Text)
+                        Case "street"
+                            mapa.ShowMArkers(Nothing, Nothing, node.Text)
+                        Case "baza"
+                            mapa.ShowMArkers()
+                    End Select
+                End If
 
             Case "Rejon"
                 Dim r As String = InputBox("Numer rejonu")
@@ -134,7 +193,7 @@ Public Class frmEditor
         End Select
 
         RefreshTreeView1()
-        mapa.ShowMArkers()
+        If e.ClickedItem.Text <> "Pokaż punkty" Then mapa.ShowMArkers()
 
     End Sub
 
@@ -152,5 +211,32 @@ Public Class frmEditor
         Catch ex As Exception
 
         End Try
+    End Sub
+
+    Private Sub BtnSAve_Click(sender As Object, e As EventArgs) Handles btnSAve.Click
+        mapa.Save()
+        Console.WriteLine("Zapisano " & Now)
+    End Sub
+
+    Private Sub BtnLoad_Click(sender As Object, e As EventArgs) Handles btnLoad.Click
+        Dim m = mapa.Load()
+        If Not IsNothing(m) Then
+            mapa = m
+            mapa.GM = Me.GM1
+            RefreshTreeView1()
+        End If
+    End Sub
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        pnsettings.Visible = False
+    End Sub
+
+    Private Sub ToolStripButton2_Click(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
+        pnsettings.Visible = True
+
+    End Sub
+
+    Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
+        RefreshTreeView1(True)
     End Sub
 End Class

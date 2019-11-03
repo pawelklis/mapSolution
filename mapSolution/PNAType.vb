@@ -3,7 +3,7 @@ Imports System.Net
 Imports GMap
 Imports GMap.NET.MapProviders
 
-Public Class PNAType
+<serializable> public class PNAType
     Inherits AddressType
 
     Public Sub New()

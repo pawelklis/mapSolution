@@ -32,11 +32,19 @@ Partial Class frmEditor
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.Button1 = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
+        Me.btnSAve = New System.Windows.Forms.ToolStripButton()
+        Me.btnLoad = New System.Windows.Forms.ToolStripButton()
+        Me.pnsettings = New System.Windows.Forms.Panel()
+        Me.ckAutoRefresh = New System.Windows.Forms.CheckBox()
+        Me.Button3 = New System.Windows.Forms.Button()
+        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
+        Me.pnsettings.SuspendLayout()
         Me.SuspendLayout()
         '
         'GM1
@@ -74,6 +82,7 @@ Partial Class frmEditor
         '
         'SplitContainer1.Panel1
         '
+        Me.SplitContainer1.Panel1.Controls.Add(Me.pnsettings)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Button2)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Button1)
         Me.SplitContainer1.Panel1.Controls.Add(Me.GM1)
@@ -95,7 +104,7 @@ Partial Class frmEditor
         '
         'ToolStrip1
         '
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton1})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton1, Me.btnSAve, Me.btnLoad, Me.ToolStripButton2, Me.ToolStripButton3})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(189, 25)
@@ -136,6 +145,72 @@ Partial Class frmEditor
         Me.Button2.Text = "+"
         Me.Button2.UseVisualStyleBackColor = True
         '
+        'btnSAve
+        '
+        Me.btnSAve.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.btnSAve.Image = CType(resources.GetObject("btnSAve.Image"), System.Drawing.Image)
+        Me.btnSAve.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnSAve.Name = "btnSAve"
+        Me.btnSAve.Size = New System.Drawing.Size(23, 22)
+        Me.btnSAve.Text = "Zapisz"
+        '
+        'btnLoad
+        '
+        Me.btnLoad.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.btnLoad.Image = CType(resources.GetObject("btnLoad.Image"), System.Drawing.Image)
+        Me.btnLoad.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnLoad.Name = "btnLoad"
+        Me.btnLoad.Size = New System.Drawing.Size(23, 22)
+        Me.btnLoad.Text = "Otwórz"
+        '
+        'pnsettings
+        '
+        Me.pnsettings.Controls.Add(Me.Button3)
+        Me.pnsettings.Controls.Add(Me.ckAutoRefresh)
+        Me.pnsettings.Location = New System.Drawing.Point(198, 12)
+        Me.pnsettings.Name = "pnsettings"
+        Me.pnsettings.Size = New System.Drawing.Size(200, 192)
+        Me.pnsettings.TabIndex = 3
+        '
+        'ckAutoRefresh
+        '
+        Me.ckAutoRefresh.AutoSize = True
+        Me.ckAutoRefresh.Checked = True
+        Me.ckAutoRefresh.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.ckAutoRefresh.Location = New System.Drawing.Point(15, 20)
+        Me.ckAutoRefresh.Name = "ckAutoRefresh"
+        Me.ckAutoRefresh.Size = New System.Drawing.Size(146, 17)
+        Me.ckAutoRefresh.TabIndex = 0
+        Me.ckAutoRefresh.Text = "Auto odświeżanie drzewa"
+        Me.ckAutoRefresh.UseVisualStyleBackColor = True
+        '
+        'Button3
+        '
+        Me.Button3.Location = New System.Drawing.Point(179, 0)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(18, 23)
+        Me.Button3.TabIndex = 1
+        Me.Button3.Text = "X"
+        Me.Button3.UseVisualStyleBackColor = True
+        '
+        'ToolStripButton2
+        '
+        Me.ToolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripButton2.Image = CType(resources.GetObject("ToolStripButton2.Image"), System.Drawing.Image)
+        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton2.Name = "ToolStripButton2"
+        Me.ToolStripButton2.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripButton2.Text = "ToolStripButton2"
+        '
+        'ToolStripButton3
+        '
+        Me.ToolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripButton3.Image = CType(resources.GetObject("ToolStripButton3.Image"), System.Drawing.Image)
+        Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton3.Name = "ToolStripButton3"
+        Me.ToolStripButton3.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripButton3.Text = "ToolStripButton3"
+        '
         'frmEditor
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -151,6 +226,8 @@ Partial Class frmEditor
         Me.SplitContainer1.ResumeLayout(False)
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
+        Me.pnsettings.ResumeLayout(False)
+        Me.pnsettings.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -163,4 +240,11 @@ Partial Class frmEditor
     Friend WithEvents ContextMenuStrip1 As Windows.Forms.ContextMenuStrip
     Friend WithEvents Button2 As Windows.Forms.Button
     Friend WithEvents Button1 As Windows.Forms.Button
+    Friend WithEvents btnSAve As Windows.Forms.ToolStripButton
+    Friend WithEvents btnLoad As Windows.Forms.ToolStripButton
+    Friend WithEvents pnsettings As Windows.Forms.Panel
+    Friend WithEvents Button3 As Windows.Forms.Button
+    Friend WithEvents ckAutoRefresh As Windows.Forms.CheckBox
+    Friend WithEvents ToolStripButton2 As Windows.Forms.ToolStripButton
+    Friend WithEvents ToolStripButton3 As Windows.Forms.ToolStripButton
 End Class

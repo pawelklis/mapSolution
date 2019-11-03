@@ -6,7 +6,8 @@
         Try
             frm.ShowDialog()
         Catch ex As Exception
-
+            Console.WriteLine(ex.ToString)
+            Main()
         End Try
 
 
